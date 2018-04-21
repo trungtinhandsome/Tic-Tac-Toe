@@ -1,4 +1,4 @@
-console.log("C4 game");
+console.log("Race For Knowledge 2018");
 
 // JavaScript logic
 var Game = {
@@ -18,15 +18,9 @@ var Game = {
     console.log("Game of connect " + n);
   },
   addMark: function(playerChosen, row, col) {
-    if (playerChosen === this.lastPlayer) {
-      console.log("Not your turn");
-    } else if (this.board[row][col] === '.') {
-      this.board[row][col] = playerChosen;
-      this["lastPlayer"] = playerChosen;
-      console.log("Player: " + playerChosen + " addMark to row: " + row + ", col: " + col);
-    } else {
-      console.log("Already marked. Try again.");
-    }
+	this.board[row][col] = playerChosen;
+	this["lastPlayer"] = playerChosen;
+	console.log("Player: " + playerChosen + " addMark to row: " + row + ", col: " + col);
   },
   checkRows: function(playerChosen) {
     for (var row = 0; row < this.board.length; row++) {
@@ -219,8 +213,7 @@ $(document).ready(function() {
   // Function to hide set up and show board and title with cached values
   var showBoard = function() {
     $('.game-setup').hide();
-    $('.game-play').show();
-    $('.title').html("C4 game - Line up " + winCount + " in a row; First to score: " + maxScore);
+    $('.game-play').css("display", "inline-flex");
     $buttonReset.hide();
   };
 
@@ -275,11 +268,25 @@ $(document).ready(function() {
     if (event.keyCode === 50) {
       pickPlayer('player2');
     }
+    // Number 2 shortcut
+    if (event.keyCode === 51) {
+      pickPlayer('player3');
+    }
+    // Number 2 shortcut
+    if (event.keyCode === 52) {
+      pickPlayer('player4');
+    }
     // Spacebar shortcut
     if (event.keyCode === 32) {
       if (player === 'player1') {
         pickPlayer('player2')
       } else if (player === 'player2') {
+        pickPlayer('player3')
+      } else if (player === 'player3') {
+        pickPlayer('player4')
+      } else if (player === 'player4') {
+        pickPlayer('incorrect')
+      } else if (player === 'incorrect') {
         pickPlayer('player1')
       }
     }
@@ -304,7 +311,9 @@ $(document).ready(function() {
   // Create object to keep track of player scores
   var playerScores = {
     player1: 0,
-    player2: 0
+    player2: 0,
+    player3: 0,
+    player4: 0
   };
 
   // Check round score and record value
@@ -314,7 +323,7 @@ $(document).ready(function() {
       playerScores[player]++;
       $msg.html("Winner is" + player + "<br/> Reset Board");
       $body.removeClass().addClass(player);
-      console.log('player1Score:' + playerScores["player1"], 'player2Score ' + playerScores["player2"]);
+      console.log('player1Score:' + playerScores["player1"], 'player2Score ' + playerScores["player2"], 'player3Score ' + playerScores["player3"], 'player4Score ' + playerScores["player4"]);
       $cell.off('click');
       printWin();
       $buttonReset.show();
@@ -328,15 +337,22 @@ $(document).ready(function() {
     // Append round score
     $('button.player1 span').html(playerScores["player1"]);
     $('button.player2 span').html(playerScores["player2"]);
+    $('button.player3 span').html(playerScores["player3"]);
+    $('button.player4 span').html(playerScores["player4"]);
+    $('button.incorrect span').html(playerScores["incorrect"]);
   };
 
   // Check total round wins
   var checkGame = function() {
-    if (playerScores["player1"] === maxScore || playerScores["player2"] === maxScore) {
-      if (playerScores["player1"] > playerScores["player2"]) {
+    if (playerScores["player1"] === maxScore || playerScores["player2"] === maxScore || playerScores["player3"] === maxScore || playerScores["player4"] === maxScore) {
+      if (playerScores["player1"] > playerScores["player2"] && playerScores["player1"] > playerScores["player3"] && playerScores["player1"] > playerScores["player4"]) {
         swal("player1 WINS!", "Click ok to play again!", "success");
-      } else if (playerScores["player1"] < playerScores["player2"]) {
+      } else if (playerScores["player1"] < playerScores["player2"] && playerScores["player3"] < playerScores["player2"] && playerScores["player4"] < playerScores["player2"]) {
         swal("player2 WINS!", "Click ok to play again!", "success");
+      } else if (playerScores["player1"] < playerScores["player3"] && playerScores["player2"] < playerScores["player3"] && playerScores["player4"] < playerScores["player3"]) {
+        swal("player3 WINS!", "Click ok to play again!", "success");
+      } else if (playerScores["player1"] < playerScores["player4"] && playerScores["player3"] < playerScores["player4"] && playerScores["player2"] < playerScores["player4"]) {
+        swal("player4 WINS!", "Click ok to play again!", "success");
       }
       $('.sweet-alert').on('click', 'button', function() {
         location.reload();
@@ -354,16 +370,28 @@ $(document).ready(function() {
     // Check conditions
     if (player === undefined) {
       $msg.html("Please select a player");
-    } else if (player === Game.lastPlayer && player !== undefined) {
-      $msg.html("Turn taken. Press spacebar to switch players");
+    } else if (player !== "incorrect"){
+		Game.addMark(player, row, col);
+		Game.checkAll(player);
+		el.removeClass('player1');
+		el.removeClass('player2');
+		el.removeClass('player3');
+		el.removeClass('player4');
+		el.removeClass('incorrect');
+		el.addClass(player);
+		checkRound("player1");
+		checkRound("player2");
+		checkRound("player3");
+		checkRound("player4");
+		checkGame();
     } else {
-      Game.addMark(player, row, col);
-      Game.checkAll(player);
-      el.addClass(player);
-      checkRound("player1");
-      checkRound("player2");
-      checkGame();
-    }
+		el.removeClass('player1');
+		el.removeClass('player2');
+		el.removeClass('player3');
+		el.removeClass('player4');
+		el.removeClass('incorrect');
+		el.addClass(player);
+	}
     return true;
   };
 
@@ -371,6 +399,9 @@ $(document).ready(function() {
     Game.newBoard(size); // Store the new board in a variable
     $cell.removeClass('player1');
     $cell.removeClass('player2');
+    $cell.removeClass('player3');
+    $cell.removeClass('player4');
+    $cell.removeClass('incorrect');
     $cell.removeClass('win');
     $cell.on('click', takeMove);
 

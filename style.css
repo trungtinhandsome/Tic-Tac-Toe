@@ -2,40 +2,44 @@
   box-sizing: border-box;
 }
 body {
-  margin: 0% 5%;
-  width: 100%;
+  background-image: url("bg.jpg");
+  background-repeat: no-repeat;
 }
 .clearfix:after {
   content: "";
   display: block;
   clear: both;
 }
+
+.players {
+    margin-top: 130px;
+    margin-left: 80px;
+}
 .container {
-  width: 450px;
-  height: 450px;
+  margin-top: 148px;
+  margin-left: 408px;
+  width: 537px;
+  height: 537px;
   display: block;
-  margin: 0 auto;
-  border: 1px solid black;
 }
 .cell {
   width: 20%;
   height: 20%;
-  background-color: #d3d3d3;
+  padding: 30px;
   float: left;
+  font-size: x-large;
+  font-family: cursive;
+  color: rgb(255, 255, 250);
   border: 1px solid white;
 }
 button {
   font-size: 20px;
-  width: 20%;
+  color: #fffffa;
   text-align: center;
   outline: none;
   float: left;
-}
-button.player1 {
-  margin-left: 30%;
-}
-button.player2 {
-  margin-right: 30%;
+  margin-top: 75px;
+  width: 325px;
 }
 button.reset, button.build-board {
   display: block;
@@ -50,13 +54,14 @@ button.reset {
   text-align: center;
   font-style: italic;
   font-size: 25px;
-  width: 40%;
   height: 80px;
   padding: 10px;
+  width: 160px;
+  margin-left: -170px;
+  margin-top: 15px;
   display: block;
-  margin: 10px auto;
-  border: 1px solid black;
-  background-color: #d3d3d3;
+  border: 1px solid #fbe1a6;
+  background-color: #57a8bb;
 }
 .msg {
   background-color: #d3d3d3;
@@ -65,7 +70,17 @@ button.reset {
   background-color: chartreuse;
 }
 .player2 {
-  background-color: yellow;
+  background-color: blueviolet;
+}
+.player3 {
+  background-color: red;
+}
+.player4 {
+  background-color: #5dc2f1;
+}
+.incorrect {
+  color: white;
+  background-color: black;
 }
 .reset {
   background-color: ghostwhite;
